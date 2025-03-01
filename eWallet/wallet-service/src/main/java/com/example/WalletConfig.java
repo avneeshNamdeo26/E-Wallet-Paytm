@@ -42,6 +42,7 @@ public class WalletConfig {
         properties.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,StringDeserializer.class);
         return properties;
     }
+
     @Bean
     ConsumerFactory getConsumerFactory() {
         return new DefaultKafkaConsumerFactory(getConsumerProperties());

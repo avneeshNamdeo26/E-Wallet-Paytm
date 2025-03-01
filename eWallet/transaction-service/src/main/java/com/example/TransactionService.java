@@ -2,6 +2,7 @@ package com.example;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -26,6 +27,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class TransactionService implements UserDetailsService {
 
     @Autowired
@@ -58,7 +60,7 @@ public class TransactionService implements UserDetailsService {
         jsonObject.put(CommonConstants.TRANSACTION_CREATED_TOPIC_AMOUNT,amount);
         jsonObject.put(CommonConstants.TRANSACTION_CREATED_TOPIC_TRANSACTIONId,transaction.getTransactionId());
 
-        KafkaTemplate.send(CommonConstants.TRANSACTION_COMPLETED_TOPIC,
+        KafkaTemplate.send(CommonConstants.TRANSACTION_CREATED_TOPIC,
                 objectMapper.writeValueAsString(jsonObject));
 
         return transaction.getTransactionId();
@@ -87,27 +89,32 @@ public class TransactionService implements UserDetailsService {
             transactionStatusEnum = TransactionStatusEnum.FAILED;
 
         }
-        transactionRepository.updateTransaction(transactionId,TransactionStatusEnum.SUCCESS);
+        transactionRepository.updateTransaction(transactionId,transactionStatusEnum);
 
-        String senderMessage = "Hi, your transaction with id "+ transactionId + " got " + walletUpdateStatus;
+        try {
+            String senderMessage = "Hi, your transaction with id " + transactionId + " got " + walletUpdateStatus;
 
-        JSONObject senderEmailObj = new JSONObject();
-        senderEmailObj.put("email", senderEmail);
-        senderEmailObj.put("message0", senderMessage);
-        KafkaTemplate.send(CommonConstants.TRANSACTION_COMPLETED_TOPIC,
-                objectMapper.writeValueAsString(senderEmailObj));
+            JSONObject senderEmailObj = new JSONObject();
+            senderEmailObj.put("email", senderEmail);
+            senderEmailObj.put("message0", senderMessage);
+            KafkaTemplate.send(CommonConstants.TRANSACTION_COMPLETED_TOPIC, transactionId + "_sender",
+                    objectMapper.writeValueAsString(senderEmailObj));
+            log.info("Sender Notification sent");
 
-        if(walletUpdateStatus.equalsIgnoreCase("success")){
-            String receiverMessage = "Hi you have received Rs. "+ amount+ " from "+ senderId +
-                    " in your wallet linked with phone number "+ receiverId;
+            if (walletUpdateStatus.equalsIgnoreCase("success")) {
+                String receiverMessage = "Hi you have received Rs. " + amount + " from " + senderId +
+                        " in your wallet linked with phone number " + receiverId;
 
-            JSONObject receiverEmailObj = new JSONObject();
-            receiverEmailObj.put("email", receiverEmail);
-            receiverEmailObj.put("message", receiverMessage);
-            KafkaTemplate.send(CommonConstants.TRANSACTION_COMPLETED_TOPIC,
-                    objectMapper.writeValueAsString(receiverEmailObj));
+                JSONObject receiverEmailObj = new JSONObject();
+                receiverEmailObj.put("email", receiverEmail);
+                receiverEmailObj.put("message", receiverMessage);
+                KafkaTemplate.send(CommonConstants.TRANSACTION_COMPLETED_TOPIC, transactionId + "_receiver",
+                        objectMapper.writeValueAsString(receiverEmailObj));
+                log.info("Receiver notification sent");
+            }
+        }catch (Exception e){
+            log.error("Failed to send transaction notification",e);
         }
-
     }
 
     @Override

@@ -6,21 +6,23 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/transact")
 public class TransactionController {
 
     @Autowired
     TransactionService transactionService;
 
-    @PostMapping("/transact")
-    public String transact(@RequestParam("receiver") String receiver,
-                           @RequestParam("amount") double amount,
-                           @RequestParam("reason") String reason) throws JsonProcessingException {
+    @PostMapping("/initiate")
+    public String transact(@RequestBody TransactionDTO transactionDTO) throws JsonProcessingException {
+        System.out.println("API hitting");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails user = (UserDetails) authentication.getPrincipal();
-        return transactionService.transact(user.getUsername(),receiver,amount,reason);
+        return transactionService.transact(user.getUsername(),transactionDTO.getReceiver(),transactionDTO.getAmount()
+                                    ,transactionDTO.getReason());
     }
 }
