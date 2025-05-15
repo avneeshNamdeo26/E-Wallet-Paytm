@@ -39,8 +39,6 @@ public class UserCreateRequest {
                 .userIdentifier(userIdentifier)
                 .identifierValue(identifierValue)
                 .build();
-
-
     }
 
 }

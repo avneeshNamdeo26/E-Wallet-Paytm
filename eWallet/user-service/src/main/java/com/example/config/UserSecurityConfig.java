@@ -30,13 +30,13 @@ public class UserSecurityConfig{
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.httpBasic(withDefaults()).csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authenticationManagerBuilder ->
+                .authorizeHttpRequests( authenticationManagerBuilder ->
                         authenticationManagerBuilder
                                 .requestMatchers(HttpMethod.POST,"/user/**").permitAll()
                                 .requestMatchers("/user/**").hasAuthority(USER_AUTHORITY)
                                 .requestMatchers("/admin/**").hasAnyAuthority(ADMIN_AUTHORITY,SERVICE_AUTHORITY)
                 )
-                .formLogin(withDefaults());
+                    .formLogin(withDefaults());
         return http.build();
     }
 }

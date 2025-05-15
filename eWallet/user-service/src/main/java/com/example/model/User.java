@@ -60,7 +60,7 @@ public class User implements UserDetails, Serializable {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         String[] authorities = this.authorities.split(AUTHORITY_DELIMITER);
         return Arrays.stream(authorities)
-                .map(authority-> new SimpleGrantedAuthority(authority))
+                .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
 
