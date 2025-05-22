@@ -1,5 +1,9 @@
-package com.example;
+package com.example.service;
 
+import com.example.CommonConstants;
+import com.example.enums.TransactionStatusEnum;
+import com.example.model.Transaction;
+import com.example.repository.TransactionRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -95,10 +99,12 @@ public class TransactionService implements UserDetailsService {
             String senderMessage = "Hi, your transaction with id " + transactionId + " got " + walletUpdateStatus;
 
             JSONObject senderEmailObj = new JSONObject();
-            senderEmailObj.put("email", senderEmail);
-            senderEmailObj.put("message0", senderMessage);
-            KafkaTemplate.send(CommonConstants.TRANSACTION_COMPLETED_TOPIC, transactionId + "_sender",
-                    objectMapper.writeValueAsString(senderEmailObj));
+            senderEmailObj.put(CommonConstants.TRANSACTION_COMPLETED_TOPIC_SENDER_EMAIL, senderEmail);
+            senderEmailObj.put(CommonConstants.TRANSACTION_COMPLETED_TOPIC_SENDER_MESSAGE, senderMessage);
+            KafkaTemplate.send(
+                    CommonConstants.TRANSACTION_COMPLETED_TOPIC, transactionId + "_sender",
+                    objectMapper.writeValueAsString(senderEmailObj)
+            );
             log.info("Sender Notification sent");
 
             if (walletUpdateStatus.equalsIgnoreCase("success")) {
@@ -106,10 +112,12 @@ public class TransactionService implements UserDetailsService {
                         " in your wallet linked with phone number " + receiverId;
 
                 JSONObject receiverEmailObj = new JSONObject();
-                receiverEmailObj.put("email", receiverEmail);
-                receiverEmailObj.put("message", receiverMessage);
-                KafkaTemplate.send(CommonConstants.TRANSACTION_COMPLETED_TOPIC, transactionId + "_receiver",
-                        objectMapper.writeValueAsString(receiverEmailObj));
+                receiverEmailObj.put(CommonConstants.TRANSACTION_COMPLETED_TOPIC_RECEIVER_EMAIL, receiverEmail);
+                receiverEmailObj.put(CommonConstants.TRANSACTION_COMPLETED_TOPIC_RECEIVER_MESSAGE, receiverMessage);
+                KafkaTemplate.send(
+                        CommonConstants.TRANSACTION_COMPLETED_TOPIC, transactionId + "_receiver",
+                        objectMapper.writeValueAsString(receiverEmailObj)
+                );
                 log.info("Receiver notification sent");
             }
         }catch (Exception e){

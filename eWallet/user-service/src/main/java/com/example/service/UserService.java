@@ -1,5 +1,8 @@
-package com.example;
+package com.example.service;
 
+import com.example.model.User;
+import com.example.dto.UserCreateRequest;
+import com.example.repository.UserRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONObject;
@@ -13,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.example.CommonConstants.*;
-import static com.example.UserConstants.USER_AUTHORITY;
+import static com.example.constants.UserConstants.USER_AUTHORITY;
 
 @Service
 public class UserService implements UserDetailsService {

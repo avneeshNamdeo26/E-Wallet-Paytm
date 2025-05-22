@@ -21,13 +21,21 @@ public class NotificationService {
     private  JavaMailSender mailSender;
 
     @KafkaListener(topics = CommonConstants.TRANSACTION_COMPLETED_TOPIC, groupId = "EWallet_Group")
-    public void sendEmailAfterTransactionUpdate(ConsumerRecord<String, String> record) throws ParseException, JsonProcessingException {
+    public void sendEmailAfterTransactionUpdate(ConsumerRecord<String, String> record)
+            throws ParseException, JsonProcessingException {
 
         String message = record.value();
         log.info("Received message: {}", message);
 
-        JSONParser parser = new JSONParser();
-        JSONObject data = (JSONObject) parser.parse(message);
+        JSONObject data;
+        try {
+            JSONParser parser = new JSONParser();
+            data = (JSONObject) parser.parse(message);
+        } catch (ParseException e) {
+            log.error("Failed to parse message: {}", message, e);
+            return;
+
+        }
 
         String senderEmail = (String) data.get(CommonConstants.TRANSACTION_COMPLETED_TOPIC_SENDER_EMAIL);
         String senderMessage = (String) data.get(CommonConstants.TRANSACTION_COMPLETED_TOPIC_SENDER_MESSAGE);

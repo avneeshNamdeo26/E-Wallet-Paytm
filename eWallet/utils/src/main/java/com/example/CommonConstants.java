@@ -23,10 +23,10 @@ public class CommonConstants {
     public static final String TRANSACTION_CREATED_TOPIC = "transaction_created";
     public static final String TRANSACTION_COMPLETED_TOPIC = "transaction_completed";
 
-    public static final String TRANSACTION_COMPLETED_TOPIC_SENDER_EMAIL = "email";
-    public static final String TRANSACTION_COMPLETED_TOPIC_SENDER_MESSAGE = "message";
-    public static final String TRANSACTION_COMPLETED_TOPIC_RECEIVER_EMAIL = "email";
-    public static final String TRANSACTION_COMPLETED_TOPIC_RECEIVER_MESSAGE = "message";
+    public static final String TRANSACTION_COMPLETED_TOPIC_SENDER_EMAIL = "senderEmail";
+    public static final String TRANSACTION_COMPLETED_TOPIC_SENDER_MESSAGE = "senderMessage";
+    public static final String TRANSACTION_COMPLETED_TOPIC_RECEIVER_EMAIL = "receiverEmail";
+    public static final String TRANSACTION_COMPLETED_TOPIC_RECEIVER_MESSAGE = "receiverMessage";
 
 
     //wallet related constants

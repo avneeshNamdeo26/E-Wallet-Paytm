@@ -1,4 +1,4 @@
-package com.example;
+package com.example.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.producer.ProducerConfig;

@@ -1,5 +1,7 @@
-package com.example;
+package com.example.dto;
 
+import com.example.UserIdentifier;
+import com.example.model.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

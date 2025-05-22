@@ -1,4 +1,4 @@
-package com.example;
+package com.example.constants;
 
 public class UserConstants {
     public static final String USER_AUTHORITY = "usr";

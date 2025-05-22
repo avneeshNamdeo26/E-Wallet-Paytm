@@ -1,5 +1,6 @@
-package com.example;
+package com.example.model;
 
+import com.example.enums.TransactionStatusEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

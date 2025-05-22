@@ -1,5 +1,6 @@
-package com.example;
+package com.example.config;
 
+import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static com.example.UserConstants.*;
+import static com.example.constants.UserConstants.*;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration

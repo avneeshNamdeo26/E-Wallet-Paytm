@@ -1,6 +1,7 @@
-package com.example;
+package com.example.model;
 
 
+import com.example.UserIdentifier;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
